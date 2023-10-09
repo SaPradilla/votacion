@@ -2,7 +2,7 @@ const multer = require('multer')
 const configuracionMulter= {
     storage:fileStorage = multer.diskStorage({
         destination:(req,file, cb)=>{
-            cb(null,__dirname+'../../cantidatos')
+            cb(null,__dirname+'../../candidatos')
         },
         filename:(req,file,cb)=>{
             const extension = file.mimetype.split('/')[1];
