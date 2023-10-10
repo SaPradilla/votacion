@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   candidato.init({
     nombre: DataTypes.STRING,
     apellido: DataTypes.STRING,
-    foto: DataTypes.BLOB,
+    foto: DataTypes.STRING,
     biografia: DataTypes.STRING,
     cargo_postulante:DataTypes.ENUM('Alcalde','Gobernador','Junta Comunal','Asamblea','Representante SENA')
 

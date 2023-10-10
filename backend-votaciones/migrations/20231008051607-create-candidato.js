@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       foto: {
-        type: Sequelize.BLOB
+        type: Sequelize.STRING
       },
       biografia: {
         type: Sequelize.STRING
