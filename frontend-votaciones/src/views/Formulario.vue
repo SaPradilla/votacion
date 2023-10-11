@@ -14,7 +14,8 @@
         existe:{
             type: Boolean,
             required: true
-        }
+        },
+ 
     })
     const cargando = ref(false)
 
@@ -29,21 +30,20 @@
 
     const handleSubmit = (data) => {
         cargando.value = true
-        // data.tipo_seleccion = props.seleccion
+        data.tipo_seleccion = props.seleccion
 
-        // ServiceApi.agregarVotante(data)
-        //     .then(respuesta => {
-        //         console.log(respuesta)
-        //         // Redireccionar
-        //         // router.push({ name: 'votacion-'})
-        //     })
-        //     .catch(error => console.log(error))
+        ServiceApi.agregarVotante(data)
+            .then(respuesta => {
+                console.log(respuesta)
+                // Redireccionar
+                // router.push({ name: 'votacion-'})
+            })
+            .catch(error => console.log(error))
         
         setTimeout(()=>{
             cargando.value = false
             emit('update:existe',true)
         },1500)
-        localStorage.setItem('existe', JSON.stringify(props.existe))
     }
 
 </script>
@@ -64,7 +64,7 @@
             <h2 class=" font-semibold text-3xl">Cargando los cantidatos...</h2>
         </div>
         <div v-else class="mx-auto mt-10 bg-white shadow">
-            <h1 class="text-4xl py-6 text-green-500 text-center font-bold uppercase"> Registro para Votacion de {{ seleccion }} </h1>
+            <h1 class="text-4xl py-6 text-green-500 text-center font-bold uppercase"> Registro </h1>
             <div class="mx-auto md:w-2/3 py-20 px-6">
                 <FormKit
                     type="form"

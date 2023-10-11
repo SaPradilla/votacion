@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      votante.hasMany(models.votos,{
+        foreignKey:'votanteId'
+      })
+
     }
   }
   votante.init({
@@ -19,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     tipo_documento: DataTypes.ENUM('CC','TI'),
     documento: DataTypes.STRING,
     numero_celular: DataTypes.STRING,
-    correo: DataTypes.STRING
+    correo: DataTypes.STRING,
+    contrasena:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'votante',

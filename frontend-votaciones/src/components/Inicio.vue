@@ -14,7 +14,7 @@
     
     const redirigir = ( ) =>{
         console.log(seleccion.value)
-        router.push({ name: `form${seleccion.value}` })
+        router.push({ name: `form${seleccion.value}`,  params: { seleccion: seleccion.value  } })
     }
     import ImagenBackgraound from '../assets/img/votacionbg.jpg'
 

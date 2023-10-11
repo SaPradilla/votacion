@@ -4,8 +4,8 @@ export default {
     agregarVotante(data) {
         return api.post('/votante/registrar', data)
     },
-    agregarCantidatos(data){
-        return api.post('/candidato/registrar',data)
+    loguearVotante(data){
+        return api.post('/votante/login',data)
     }
     // actualizarUsuario(id, data) {
     //    return api.put('/admin/edit/user/' + id,data)

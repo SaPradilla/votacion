@@ -11,10 +11,10 @@ const router = createRouter({
       component: Inicio
     },
     {
-      path: '/votar-alcalde',
+      path: '/votar-alcalde/:seleccion',
       name: 'formAlcalde',
       component: () => import('../components/CantidatosAlcaldes.vue'),
-      props: { seleccion: 'Alcalde' }
+      props: true,
     },
     {
       path: '/votar-gobernador',
@@ -39,6 +39,11 @@ const router = createRouter({
       name: 'formAsamblea',
       component: () => import('../views/Formulario.vue'),
       props: { seleccion: 'Asamblea' }
+    },
+    {
+      path: '/registrar-votante',
+      name: 'registro-votante',
+      component: () => import('../views/Formulario.vue'),
     },{
 
       path:'/candidato/registrar',

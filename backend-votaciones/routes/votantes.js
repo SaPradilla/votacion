@@ -4,5 +4,6 @@ const router = express.Router()
 const Controller = require('../controllers/votanteController')
 router 
     .post('/registrar',Controller.Create)
+    .post('/login',Controller.Login)
 
 module.exports = router

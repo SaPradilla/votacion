@@ -19,13 +19,19 @@ module.exports = {
         type: Sequelize.ENUM('CC','TI')
       },
       documento: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       numero_celular: {
         type: Sequelize.STRING
       },
       correo: {
         type: Sequelize.STRING
+      },
+      contrasena:{
+        type: Sequelize.STRING,
+        allowNull:false
       },
       createdAt: {
         allowNull: false,

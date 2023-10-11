@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const VotanteRoute = require('./votantes')
 const CandidatoRoute = require('./candidatos')
+const VotosRoute = require('./votos')
 
 const routersList = [
     {
@@ -11,6 +12,10 @@ const routersList = [
     {
         path:'/candidato',  
         route:CandidatoRoute
+    },
+    {
+        path:'/votos',  
+        route:VotosRoute
     }
 ]
 //En rutador
