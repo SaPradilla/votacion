@@ -4,7 +4,7 @@ const router = express.Router()
 const Controller = require('../controllers/votarController')
 
 router 
-    .post('/registrar/:candidatoId/:votanteId',Controller.Create)
+    .post('/registrar/:seleccion/:candidatoId',Controller.Create)
     .get('/listar',Controller.Listar)
     .get('/ver-votos/:id', Controller.VerVotosCandidato)
 

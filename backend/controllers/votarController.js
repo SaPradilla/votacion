@@ -2,10 +2,25 @@ const db = require('../models')
 const Voto = db.votos
 
 const Create = async(req,res)=>{
-    const {candidatoId,votanteId} = req.params 
+    const {seleccion,candidatoId} = req.params
+    const {votanteId} = req.body 
     try{
-        // metodos para validar la existencia de los ids
-
+        // validar que ya voto por uno
+        const finVotoCandidato = await Voto.findOne({
+            include:{
+                model:db.candidato,
+                where:{
+                    cargo_postulante:seleccion
+                }
+            },
+            where:{
+                votanteId: votanteId
+            }
+        })
+        if(finVotoCandidato){
+            return res.json('Solo puedes votar por un cargo una vez.')
+        }
+    
         const nuevoVoto = Voto.create({
             candidatoId,
             votanteId

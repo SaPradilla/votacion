@@ -1,22 +1,23 @@
 <script setup>
     import { FormKit } from '@formkit/vue'
-    import {reactive,ref} from 'vue'
+    import {reactive,ref,onMounted} from 'vue'
+    import { useRouter,useRoute } from 'vue-router'
     import RouterLink from '../components/UI/RouterLink.vue';
     import ServiceApi from '../services/VotanteService.js'
     import Spinner from '../components/Spinner.vue';
+    import helper from '../helper';
     const emit = defineEmits(['update:existe'])
+    const route = useRoute()
 
     const props = defineProps({
         seleccion: {
             type: String,
             required: true
         },
-        existe:{
-            type: Boolean,
-            required: true
-        },
  
     })
+    const seleccion = ref('')
+
     const cargando = ref(false)
 
     const persona = reactive({
@@ -25,24 +26,32 @@
         tipo_documento:'',
         documento:'',
         numero_celular:'',
-        tipo_seleccion: ''
+        tipo_seleccion: '',
+        contrasena:''
+    })
+
+    onMounted(() => {
+        seleccion.value = route.params.seleccion
+        console.log(seleccion.value)
+
     })
 
     const handleSubmit = (data) => {
         cargando.value = true
-        data.tipo_seleccion = props.seleccion
 
-        ServiceApi.agregarVotante(data)
+        data.tipo_seleccion = seleccion.value
+
+        ServiceApi.agregarVotante(data) 
             .then(respuesta => {
-                console.log(respuesta)
-                // Redireccionar
-                // router.push({ name: 'votacion-'})
+                // Añade el id al localstorage para luego validarlo
+                localStorage.setItem('exits-user',respuesta.data.Votante.id)
             })
             .catch(error => console.log(error))
-        
+            
+        const lol = helper().usuarioRegistrado
         setTimeout(()=>{
             cargando.value = false
-            emit('update:existe',true)
+            console.log(lol )
         },1500)
     }
 
@@ -135,6 +144,8 @@
                         v-model="persona.correo"
                    
                     />
+                    <FormKit type="password" label="Contraseña" name="contrasena" placeholder="Ingrese su contraseña"
+                        v-model="persona.contrasena" />
                     <FormKit
                         style="background-color:#22c55e ; width: 218px; height: 50px; text-align:center;  padding: 15px; text-align: center;"
                         type="submit"

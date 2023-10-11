@@ -11,39 +11,17 @@ const router = createRouter({
       component: Inicio
     },
     {
-      path: '/votar-alcalde/:seleccion',
+      path: '/votar/:seleccion',
       name: 'formAlcalde',
       component: () => import('../components/CantidatosAlcaldes.vue'),
       props: true,
     },
     {
-      path: '/votar-gobernador',
-      name: 'formGobernador',
-      component: () => import('../views/Formulario.vue'),
-      props: { seleccion: 'Gobernador' }
-    },
-    {
-      path: '/votar-junta',
-      name: 'formJunta comunal',
-      component: () => import('../views/Formulario.vue'),
-      props: { seleccion: 'Junta comunal' }
-    },
-    {
-      path: '/votar-gobernador',
-      name: 'formRepresentante SENA',
-      component: () => import('../views/Formulario.vue'),
-      props: { seleccion: 'Representante SENA' }
-    },
-    {
-      path: '/votar-gobernador',
-      name: 'formAsamblea',
-      component: () => import('../views/Formulario.vue'),
-      props: { seleccion: 'Asamblea' }
-    },
-    {
-      path: '/registrar-votante',
+      path: '/registrar-votante/:seleccion',
       name: 'registro-votante',
       component: () => import('../views/Formulario.vue'),
+      props: true,
+
     },{
 
       path:'/candidato/registrar',

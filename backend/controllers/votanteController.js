@@ -5,10 +5,10 @@ const jwt = require('jsonwebtoken')
 
 const Create = async (req, res) => {
     const { nombre, apellido, tipo_documento, documento, numero_celular, correo, tipo_seleccion } = req.body
-    try {
+    // try {
 
         if (tipo_documento == 'TI' && tipo_seleccion !== 'Asamblea' && tipo_seleccion !== 'Representante SENA') {
-            return res.json({
+            return res.status(500).json({
                 msg: 'Los menores de edad solo pueden votar en Asamblea y en Representante SENA'
             })
         }
@@ -29,13 +29,13 @@ const Create = async (req, res) => {
             Votante: newVotante
         })
 
-    } catch (error) {
-        return res.status(500).json({
-            msg: 'Hubo un error al realizar el registro',
-            errroName: error.name,
-            error: error
-        })
-    }
+    // } catch (error) {
+    //     return res.status(500).json({
+    //         msg: 'Hubo un error al realizar el registro',
+    //         errroName: error.name,
+    //         error: error
+    //     })
+    // }
 }
 
 const Login = async (req, res) => {

@@ -1,25 +1,27 @@
 <script setup>
 import { FormKit } from '@formkit/vue'
 import { reactive, ref,onMounted ,watch} from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter,useRoute } from 'vue-router'
 import RouterLink from '../components/UI/RouterLink.vue';
 import ServiceApi from '../services/VotanteService.js'
 import Spinner from '../components/Spinner.vue';
-const emit = defineEmits(['update:existe'])
+
+
 const router = useRouter()
+const route = useRoute()
 
 const props = defineProps({
-    token: {
-        type: String,
-        required: true
-    },
     seleccion:{
         type:String,
-        required: true
+        required: true 
+    },
+    identificadorPersona:{
+        type:String,
+        required: true 
 
     }
 })
-
+const emit = defineEmits(['update:token','update:identificadorPersona'])
 const cargando = ref(false)
 
 const persona = reactive({
@@ -30,7 +32,7 @@ const persona = reactive({
 const handleSubmit = (data) => {
     cargando.value = true
     data.tipo_seleccion = props.seleccion
-    let findtoken;
+    let findtoken
     ServiceApi.loguearVotante(data)
         .then(respuesta => {
             localStorage.setItem('token', respuesta.data.data.token)
@@ -43,12 +45,13 @@ const handleSubmit = (data) => {
         
         setTimeout(() => {
             cargando.value = false
+            console.log(findtoken)
             emit('update:token',findtoken)
         }, 1500)
 
 }
 const redirigirRegistro = () => {
-    router.push({ name: 'registro-votante' })
+    router.push({ name: 'registro-votante' , params: { seleccion: props.seleccion  } })
 }
 </script>
 
@@ -74,12 +77,11 @@ const redirigirRegistro = () => {
                     <FormKit type="password" label="Contraseña" name="contrasena" placeholder="Ingrese su contraseña"
                         v-model="persona.contrasena" />
                     <FormKit
-                        style="background-color:#22c55e ; width: 218px; height: 50px; text-align:center;  padding: 15px; text-align: center;"
+                        style="background-color:#22c55e ; width: 218px; height: 50px; text-align:center;  padding: 15px; text-align: center; "
                         type="submit" label="Loguear" />
-
                 </FormKit>
                 <button @click="redirigirRegistro">
-                    <p class=" font-semibold text-xl">Aun no tienes una cuenta?</p>
+                    <p class="  cursor-pointer font-semibold text-lg hover:text-gray-600 ">¿Aún no tienes una cuenta?, Registrate</p>
                 </button>
             </div>
         </div>

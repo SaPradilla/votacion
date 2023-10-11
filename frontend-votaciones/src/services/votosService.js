@@ -1,13 +1,10 @@
 import api from "../lib/axios";
 
 export default {
-    agregarVotante(data) {
-        return api.post('/votante/registrar', data)
-    },
-    loguearVotante(data){
-        return api.post('/votante/login',data)
-    },
-        
+    Votar(seleccion,candidato,data) {
+        return api.post(`votos/registrar/${seleccion}/${candidato}`, data)
+    }
+    
     // actualizarUsuario(id, data) {
     //    return api.put('/admin/edit/user/' + id,data)
     // },
