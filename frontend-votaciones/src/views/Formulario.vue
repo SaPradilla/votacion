@@ -31,8 +31,7 @@
         cargando.value = true
         ServiceApi.agregarVotante(data) 
             .then(respuesta => {
-                // Añade el id al localstorage para luego validarlo
-                localStorage.setItem('exits-user',respuesta.data.Votante.id)
+                console.log('registro exitoso')
             })
             .catch(error => console.log(error))
         setTimeout(()=>{

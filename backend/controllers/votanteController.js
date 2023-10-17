@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const Create = async (req, res) => {
     const { nombre, apellido, tipo_documento, documento, numero_celular, correo } = req.body
-    // try {
+    try {
         const password_hash = await Encrypt.cryptPassword(req.body.contrasena)
 
         const newVotante = await Votante.create({
@@ -25,18 +25,18 @@ const Create = async (req, res) => {
             Votante: newVotante
         })
 
-    // } catch (error) {
-    //     return res.status(500).json({
-    //         msg: 'Hubo un error al realizar el registro',
-    //         errroName: error.name,
-    //         error: error
-    //     })
-    // }
+    } catch (error) {
+        return res.status(500).json({
+            msg: 'Hubo un error al realizar el registro',
+            errroName: error.name,
+            error: error
+        })
+    }
 }
 
 const Login = async (req, res) => {
     const { documento, contrasena } = req.body
-    // try {
+    try {
         
         const votanteLogin = await Votante.findOne(
             {
@@ -52,7 +52,7 @@ const Login = async (req, res) => {
         
         const contrasena_comparada = await Encrypt.comparePassword(contrasena, votanteLogin.contrasena)
 
-        if (!contrasena_comparada) { return Response.unauthorizedResponse(res, 'Credenciales incorrectas') }
+        if (!contrasena_comparada) { return res.status(500).json({msg:'Credenciales incorrectas'}) }
         
         const votante = { ...votanteLogin.dataValues }
         delete votante.contrasena
@@ -70,12 +70,31 @@ const Login = async (req, res) => {
             permisosAdmin : votanteLogin.documento === process.env.ADMIN_USER ? true : false
         })
 
-    // } catch (error) {
-    //     return res.json({
-    //         msg:'Error al loguear',
-    //         error
-    //     })
-    // }
+    } catch (error) {
+        return res.json({
+            msg:'Error al loguear',
+            error
+        })
+    }
 }
+const SeleccionesVotadas = async(req,res)=>{
+    const {votanteId} = req.params
+    try{
+        const finVotoCandidato = await db.votos.findAll({
+            where:{
+                votanteId: '1'
+            }
+        })
+        const findVotoBlanco = await db.blancos.findAll({
+            where:{
+                votanteId:votanteId
+            }
+        })
+        console.log(finVotoCandidato)
+        console.log(findVotoBlanco)
 
-module.exports = { Create ,Login }
+    }catch(error){
+        console.log(error)
+    }
+}
+module.exports = { Create ,Login,SeleccionesVotadas }

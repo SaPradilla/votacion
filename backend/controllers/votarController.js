@@ -5,7 +5,6 @@ const Blanco = db.blancos
 const Create = async(req,res)=>{
     const {seleccion,candidatoId,votanteId} = req.params
     try{
-        console.log(votanteId)
         // validar que ya voto por uno
         const finVotoCandidato = await Voto.findOne({
             include:{
