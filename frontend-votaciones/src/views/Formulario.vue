@@ -2,20 +2,11 @@
     import { FormKit } from '@formkit/vue'
     import {reactive,ref,onMounted} from 'vue'
     import { useRouter,useRoute } from 'vue-router'
-    import RouterLink from '../components/UI/RouterLink.vue';
     import ServiceApi from '../services/VotanteService.js'
     import Spinner from '../components/Spinner.vue';
-    import helper from '../helper';
-    const emit = defineEmits(['update:existe'])
+    const emit = defineEmits(['update:existe','update:tieneCuenta'])
     const route = useRoute()
 
-    const props = defineProps({
-        seleccion: {
-            type: String,
-            required: true
-        },
- 
-    })
     const seleccion = ref('')
 
     const cargando = ref(false)
@@ -26,7 +17,7 @@
         tipo_documento:'',
         documento:'',
         numero_celular:'',
-        tipo_seleccion: '',
+        correo:'',
         contrasena:''
     })
 
@@ -38,39 +29,27 @@
 
     const handleSubmit = (data) => {
         cargando.value = true
-
-        data.tipo_seleccion = seleccion.value
-
         ServiceApi.agregarVotante(data) 
             .then(respuesta => {
                 // Añade el id al localstorage para luego validarlo
                 localStorage.setItem('exits-user',respuesta.data.Votante.id)
             })
             .catch(error => console.log(error))
-            
-        const lol = helper().usuarioRegistrado
         setTimeout(()=>{
             cargando.value = false
-            console.log(lol )
+            emit('update:tieneCuenta',true)
         },1500)
     }
-
+const loguear = ()=>{
+    emit('update:tieneCuenta',true)
+}
 </script>
 
 <template>
     <div>
-
-        <div class="flex justify-end">
-            <RouterLink 
-            style="background-color: #22c55e;"
-                to="inicio"
-            >
-                Cancelar
-            </RouterLink>
-        </div>
         <div v-if="cargando" class="text-center">
             <Spinner/>
-            <h2 class=" font-semibold text-3xl">Cargando los cantidatos...</h2>
+            <h2 class=" font-semibold text-3xl">Registrando..</h2>
         </div>
         <div v-else class="mx-auto mt-10 bg-white shadow">
             <h1 class="text-4xl py-6 text-green-500 text-center font-bold uppercase"> Registro </h1>
@@ -109,6 +88,8 @@
                         name="tipo_documento"
                         :options="[
                             'CC',
+                            'TI',
+                            
                         ]"
                         help="Elige una opción para poder continuar"
                         validation="required"
@@ -136,8 +117,8 @@
 
                     <FormKit 
                         type="text"
-                        label="Email"
-                        name="email"
+                        label="Correo"
+                        name="correo"
                         placeholder="Email de Cliente"
                         validation="required|email"
                         :validation-messages="{ required: 'El Email es Obligatorio', email: 'Coloca un email válido' }"
@@ -145,13 +126,18 @@
                    
                     />
                     <FormKit type="password" label="Contraseña" name="contrasena" placeholder="Ingrese su contraseña"
+                        validation="required"
+                        :validation-messages="{ required: 'La contraseña es obligatoria' }"
                         v-model="persona.contrasena" />
                     <FormKit
                         style="background-color:#22c55e ; width: 218px; height: 50px; text-align:center;  padding: 15px; text-align: center;"
                         type="submit"
-                        label="Votar"
+                        label="Registrarse"
                     />
                 </FormKit>
+                <button  class=" justify-center" @click="loguear">
+                    <p class=" cursor-pointer font-semibold text-lg text-gray-600 ">Ya tienes una cuenta? <span class="text-gray-800">Iniciar Sesion</span></p>
+                </button>
                 
             </div>
         </div>

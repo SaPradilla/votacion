@@ -1,5 +1,5 @@
 <script setup>
-    import {ref,onMounted,watch} from 'vue'
+    import {ref} from 'vue'
     import { useRouter } from 'vue-router'
     const router = useRouter()
     
@@ -13,8 +13,7 @@
     const seleccion = ref('')
     
     const redirigir = ( ) =>{
-        console.log(seleccion.value)
-        router.push({ name: `form${seleccion.value}`,  params: { seleccion: seleccion.value  } })
+        router.push({ name: 'Votar',  params: { seleccion: seleccion.value  } })
     }
     import ImagenBackgraound from '../assets/img/votacionbg.jpg'
 

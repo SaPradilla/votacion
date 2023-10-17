@@ -37,7 +37,12 @@ const Create = async(req,res)=>{
 }
 const List = async(req,res)=>{
     try{
-        const Candidatos = await Candidato.findAll()
+        const { cargo } = req.params
+        const Candidatos = await Candidato.findAll({
+            where:{
+                cargo_postulante:cargo
+            }
+        })
         if(Candidato.length){
             return res.status(404).json({
                 msg:'No hay candidatos'

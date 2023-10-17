@@ -29,6 +29,13 @@
             .catch(error => console.log(error))
         
         setTimeout(()=>{
+            Object.assign(persona,{
+                nombre:'',
+                apellido:'',
+                biografia:'',
+                cargo_postulante:'',
+                foto:null
+            })
             cargando.value = false
         },1500)
     }
@@ -113,7 +120,7 @@
                         type="file"
                         label="Foto"
                         help="Imagen del rostro del candidato."
-                        accept=".png,.jpg,jpeg"
+                        accept=".png,.jpg,.jpeg,.jfif"
                         validation="required"
                         name="foto"
                         v-model="persona.foto"

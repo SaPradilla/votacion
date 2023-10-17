@@ -8,8 +8,8 @@ export default {
             },
         })
     },
-    obtenerCandidatos(){
-        return api.get('/candidato/listar')
+    obtenerCandidatos(cargo){
+        return api.get(`/candidato/listar/${cargo}`)
     }
     // actualizarUsuario(id, data) {
     //    return api.put('/admin/edit/user/' + id,data)

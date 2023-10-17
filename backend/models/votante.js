@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       votante.hasMany(models.votos,{
         foreignKey:'votanteId'
       })
+      votante.hasMany(models.blancos,{
+        foreignKey:'votanteId'
+      })
 
     }
   }
@@ -25,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     documento: DataTypes.STRING,
     numero_celular: DataTypes.STRING,
     correo: DataTypes.STRING,
-    contrasena:DataTypes.STRING
+    contrasena:DataTypes.STRING,
+    isMenor:DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'votante',

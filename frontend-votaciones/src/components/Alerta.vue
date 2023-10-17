@@ -8,7 +8,7 @@
     .alerta {
         text-align: center;
         margin-bottom: 2rem;
-        color: var(--blanco);
+        color: white;
         background-color: rgb(174, 0, 0);
         text-transform: uppercase;
         font-weight: 700;

@@ -1,29 +1,13 @@
 <script setup>
 import { FormKit } from '@formkit/vue'
 import { reactive, ref,onMounted ,watch} from 'vue'
-import { useRouter,useRoute } from 'vue-router'
-import RouterLink from '../components/UI/RouterLink.vue';
 import ServiceApi from '../services/VotanteService.js'
 import Spinner from '../components/Spinner.vue';
+import Alerta from '../components/Alerta.vue';
 
-
-const router = useRouter()
-const route = useRoute()
-
-const props = defineProps({
-    seleccion:{
-        type:String,
-        required: true 
-    },
-    identificadorPersona:{
-        type:String,
-        required: true 
-
-    }
-})
-const emit = defineEmits(['update:token','update:identificadorPersona'])
+const emit = defineEmits(['update:token','update:identificadorPersona','update:tieneCuenta','update:isMenorEdad'])
 const cargando = ref(false)
-
+const Error = ref('')
 const persona = reactive({
     documento: '',
     contrasena: ''
@@ -31,45 +15,55 @@ const persona = reactive({
 
 const handleSubmit = (data) => {
     cargando.value = true
-    data.tipo_seleccion = props.seleccion
     let findtoken
     ServiceApi.loguearVotante(data)
         .then(respuesta => {
             localStorage.setItem('token', respuesta.data.data.token)
             findtoken = respuesta.data.data.token
-            // console.log(respuesta.data.data.token)
-            // console.log(props.seleccion)
-            // Redireccionar
+            // Añade el id al localstorage para luego validarlo
+            localStorage.setItem('exits-user',respuesta.data.ide)
+            emit('update:identificadorPersona',respuesta.data.ide)
+            if(respuesta.data.isMenor){
+                console.log('xd')
+                localStorage.setItem('validationMenor',true)
+                emit('update:isMenorEdad',true)
+            }
+            if(respuesta.data.permisosAdmin){
+                localStorage.setItem('admin',true)
+            }
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error)
+            Error.value = 'Credenciales incorrectas'
+        })
         
         setTimeout(() => {
             cargando.value = false
             console.log(findtoken)
             emit('update:token',findtoken)
         }, 1500)
+        setTimeout(()=>{
+            Error.value = ''
+        },3000)
 
 }
-const redirigirRegistro = () => {
-    router.push({ name: 'registro-votante' , params: { seleccion: props.seleccion  } })
+const registrarse = () => {
+    emit('update:tieneCuenta',false)
 }
 </script>
 
 <template>
     <div>
-
-        <div class="flex justify-end">
-            <RouterLink style="background-color: #22c55e;" to="inicio">
-                Cancelar
-            </RouterLink>
-        </div>
         <div v-if="cargando" class="text-center">
             <Spinner />
             <h2 class=" font-semibold text-3xl">Iniciando sesion...</h2>
         </div>
-        <div v-else class="mx-auto mt-10 bg-white shadow">
+        <div v-else >
+            <div v-if="Error">
+                <Alerta>{{ Error }}</Alerta>
+            </div>
             <h1 class="text-4xl py-6 text-green-500 text-center font-bold uppercase"> Iniciar Sesion </h1>
-            <div class="mx-auto md:w-2/3 py-20 px-6">
+            <div class="">
                 <FormKit type="form" id="formulario" :actions="false" @submit="handleSubmit" :value="persona">
 
                     <FormKit type="text" label="Documento" name="documento" placeholder="Número de documento"
@@ -80,10 +74,11 @@ const redirigirRegistro = () => {
                         style="background-color:#22c55e ; width: 218px; height: 50px; text-align:center;  padding: 15px; text-align: center; "
                         type="submit" label="Loguear" />
                 </FormKit>
-                <button @click="redirigirRegistro">
-                    <p class="  cursor-pointer font-semibold text-lg hover:text-gray-600 ">¿Aún no tienes una cuenta?, Registrate</p>
-                </button>
+              
             </div>
+            <button  class=" justify-center" @click="registrarse">
+                <p class=" cursor-pointer font-semibold text-lg text-gray-600 ">¿Aún no tienes una cuenta? <span class="text-gray-800">Registrate</span></p>
+            </button>
         </div>
     </div>
 </template>

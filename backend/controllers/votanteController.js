@@ -2,16 +2,11 @@ const db = require('../models')
 const Votante = db.votante
 const Encrypt = require('../middleware/auth')
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const Create = async (req, res) => {
-    const { nombre, apellido, tipo_documento, documento, numero_celular, correo, tipo_seleccion } = req.body
+    const { nombre, apellido, tipo_documento, documento, numero_celular, correo } = req.body
     // try {
-
-        if (tipo_documento == 'TI' && tipo_seleccion !== 'Asamblea' && tipo_seleccion !== 'Representante SENA') {
-            return res.status(500).json({
-                msg: 'Los menores de edad solo pueden votar en Asamblea y en Representante SENA'
-            })
-        }
         const password_hash = await Encrypt.cryptPassword(req.body.contrasena)
 
         const newVotante = await Votante.create({
@@ -21,7 +16,8 @@ const Create = async (req, res) => {
             documento: documento,
             numero_celular: numero_celular,
             correo: correo,
-            contrasena: password_hash
+            contrasena: password_hash,
+            isMenor:tipo_documento === 'TI' ? true : false
         })
 
         return res.status(200).json({
@@ -41,6 +37,7 @@ const Create = async (req, res) => {
 const Login = async (req, res) => {
     const { documento, contrasena } = req.body
     // try {
+        
         const votanteLogin = await Votante.findOne(
             {
                 where: {
@@ -52,21 +49,25 @@ const Login = async (req, res) => {
                 msg:'No existe la cuenta del votante'
             })
         }
-
+        
         const contrasena_comparada = await Encrypt.comparePassword(contrasena, votanteLogin.contrasena)
 
         if (!contrasena_comparada) { return Response.unauthorizedResponse(res, 'Credenciales incorrectas') }
         
-        const votante = { ...votanteLogin }
-        delete votante.dataValues.contrasena
+        const votante = { ...votanteLogin.dataValues }
+        delete votante.contrasena
         
         const token = jwt.sign(
             { votante }, process.env.TOKEN_KEY, { expiresIn: "2h", }
         )
+        
+        
         return res.header('auth-token', token).json({
-            error: null,
             msg:'Inicio de sesion exitoso.',
-            data: {token}
+            data: {token},
+            ide:votante.id,
+            isMenor: votante.isMenor,
+            permisosAdmin : votanteLogin.documento === process.env.ADMIN_USER ? true : false
         })
 
     // } catch (error) {
