@@ -5,6 +5,7 @@ import RouterLink from '../components/UI/RouterLink.vue';
 
 import ApiServiceCandidatos from '../services/candidatoService'
 import ApiServiceVotar from '../services/votosService'
+import ApiServiceVotantes from '../services/VotanteService'
 
 import Login from '../views/Login.vue';
 import Formulario from '../views/Formulario.vue';
@@ -28,11 +29,9 @@ const isMenorEdad = ref(false)
 
 onMounted(() => {
 
-    ObtenerSeleccionesVotadas()
     seleccion.value = route.params.seleccion
     ObtenerToken()
     ObtenerIdVotante()
-    verificarVotoSeleccion()
     ObtenerMenor()
     ApiServiceCandidatos.obtenerCandidatos(seleccion.value)
         .then(respuesta => {
@@ -44,13 +43,36 @@ onMounted(() => {
 
 watch(token, () => {
     ObtenerToken()
+    ObtenerSeleccionesVotadas()
 
 })
+
 const ObtenerSeleccionesVotadas = () => {
-    if (localStorage.getItem('selecciones-votadas')) {
+    if(localStorage.getItem('selecciones-votadas')){
         seleccionesVotadas.value = JSON.parse(localStorage.getItem('selecciones-votadas'))
+        if (seleccionesVotadas.value.find((seleccionesVotadas) => seleccionesVotadas === seleccion.value)) {
+            yaVotoSeleccion.value = true
+        }
     }
-    return
+    else{
+        ApiServiceVotantes.validarEleccionesVotadas(identificadorPersona.value)
+            .then(respuesta =>{
+                const selecciones = respuesta.data.SeleccionesVotadas 
+                console.log(selecciones)
+                if(selecciones.length > 0){
+                    seleccionesVotadas.value = respuesta.data.SeleccionesVotadas
+                    localStorage.setItem('selecciones-votadas', JSON.stringify(respuesta.data.SeleccionesVotadas))
+                }
+                return
+            }).catch(error=> console.log(error))
+            setTimeout(() => {   
+                if (seleccionesVotadas.value.find((seleccionesVotadas) => seleccionesVotadas === seleccion.value)) {
+                    yaVotoSeleccion.value = true
+                }
+            }, 1000)
+    }
+
+    
 }
 const ObtenerToken = () => {
     // Obtiene el token de localstorage y si es existe
@@ -85,14 +107,6 @@ const SeleccionarBlanco = () => {
     }
     seleccionadoBlanco.value = true
 }
-const verificarVotoSeleccion = () => {
-
-    if (seleccionesVotadas.value.find((seleccionesVotadas) => seleccionesVotadas === seleccion.value)) {
-        yaVotoSeleccion.value = true
-    }
-    return
-}
-
 const Votar = (candidato) => {
     if (window.confirm(`Quiere votar por el candidato ${candidato.nombre} `)) {
         cargando.value = true

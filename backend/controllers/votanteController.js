@@ -79,20 +79,35 @@ const Login = async (req, res) => {
 }
 const SeleccionesVotadas = async(req,res)=>{
     const {votanteId} = req.params
+    console.log(votanteId)
+    const seleccionesVotadas = []
     try{
         const finVotoCandidato = await db.votos.findAll({
             where:{
-                votanteId: '1'
+                votanteId:votanteId
+            },
+            include:{
+                model:db.candidato,
+                attributes:['cargo_postulante']
             }
         })
         const findVotoBlanco = await db.blancos.findAll({
             where:{
                 votanteId:votanteId
-            }
+            },
+            attributes:['seleccion']
         })
-        console.log(finVotoCandidato)
-        console.log(findVotoBlanco)
 
+        finVotoCandidato.forEach(votoCandidato => {
+            seleccionesVotadas.push(votoCandidato.candidato.cargo_postulante)
+        })
+        findVotoBlanco.forEach(votoBlanco =>{
+            seleccionesVotadas.push(votoBlanco.seleccion)
+        })
+
+        return res.json({
+            SeleccionesVotadas : seleccionesVotadas
+        })
     }catch(error){
         console.log(error)
     }

@@ -7,6 +7,9 @@ export default {
     loguearVotante(data){
         return api.post('/votante/login',data)
     },
+    validarEleccionesVotadas(votanteId){
+        return api.get(`/votante/validate-seleccion/${votanteId}`)
+    }
         
     // actualizarUsuario(id, data) {
     //    return api.put('/admin/edit/user/' + id,data)

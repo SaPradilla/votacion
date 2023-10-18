@@ -35,6 +35,7 @@ const data = {
             'rgb(201, 203, 207,0.5)',
             'rgb(54, 162, 235,0.5)',
             'rgb(255, 61, 105,0.5)',
+            'rgb(255, 61, 105,0.5)',
      
         ],
         data: props.cantidadVotos

@@ -21,6 +21,7 @@
             .catch(error=> console.log(error))
         
     })
+    // Logica by ChatGpt
     const obtenerCantidadVotos = () => {
         const conteoVotos = {};
         votos.value.forEach(voto => {
