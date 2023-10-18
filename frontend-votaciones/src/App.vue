@@ -1,5 +1,4 @@
 <script setup>
-import { EventBus } from './event-bus.js'
 
 import { RouterView,useRouter } from 'vue-router'
 import {onMounted,ref,watch} from 'vue'

@@ -2,18 +2,19 @@
 import { reactive, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import RouterLink from '../components/UI/RouterLink.vue';
-import { eventBus } from './event-bus.js';
-
+// Api Endpoints
 import ApiServiceCandidatos from '../services/candidatoService'
 import ApiServiceVotar from '../services/votosService'
 import ApiServiceVotantes from '../services/VotanteService'
 
+// Componentes
 import Login from '../views/Login.vue';
 import Formulario from '../views/Formulario.vue';
 import Completado from './Completado.vue';
+// Instancias de vue-router
 const route = useRoute()
 const router = useRouter()
-
+// State
 const token = ref('')
 const candidatos = ref([])
 const seleccion = ref('')
@@ -27,9 +28,8 @@ const cargando = ref(false)
 const seleccionesVotadas = ref([])
 const isMenorEdad = ref(false)
 
-
+// Ciclo de vida, se ejecuta cada que haga un cambio
 onMounted(() => {
-
     seleccion.value = route.params.seleccion
     ObtenerToken()
     ObtenerIdVotante()
@@ -59,7 +59,6 @@ const ObtenerSeleccionesVotadas = () => {
         ApiServiceVotantes.validarEleccionesVotadas(identificadorPersona.value)
             .then(respuesta =>{
                 const selecciones = respuesta.data.SeleccionesVotadas 
-                console.log(selecciones)
                 if(selecciones.length > 0){
                     seleccionesVotadas.value = respuesta.data.SeleccionesVotadas
                     localStorage.setItem('selecciones-votadas', JSON.stringify(respuesta.data.SeleccionesVotadas))
@@ -185,13 +184,13 @@ const votarBlanco = () => {
                     </RouterLink>
                 </div>
 
-                <h1 class=" text-4xl  font-bold uppercase text-center"> Candidatos a {{ seleccion }} </h1>
-
+                <h1 class=" text-4xl text-zinc-800 font-bold uppercase text-center "> Candidatos a {{ seleccion }} </h1>
+                <p class="text-2xl text-center">Seleccione un candidato</p>
                 <div class="grid  grid-cols-3 max-[600px]:grid-cols-1   ">
                     <!-- Candidatos -->
                     <div v-for="candidato in candidatos" @click="Seleccionar(candidato)" :key="candidato.div"
                         :class="{ 'seleccionado': candidato.id === candidatoSeleccionado.id && seleccionado }"
-                        class="candidato  w-80 min-h-0  m-12 p-7 shadow-2xl cursor-pointer max-[600px]:w-80">
+                        class="candidato rounded-lg bg-slate-50 w-80 min-h-0  m-12 p-7 shadow-2xl cursor-pointer max-[600px]:w-80">
 
                         <div class="seleccionadoBoton -ml-8 absolute ">
 

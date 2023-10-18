@@ -4,9 +4,10 @@
     import ApiServiceVotar from '../services/votosService'
     import Grafica from './Grafica.vue';
     const route = useRoute()
+
+    // States
     const seleccion = ref('')
     const votos = ref([])
-
     const cantidadVotos = ref([])
     const candidatos = ref([])
 
@@ -16,6 +17,7 @@
             .then(respuesta =>{
                 votos.value = respuesta.data.Votos    
                 obtenerCantidadVotos()
+                console.log('Se ejecuto')
                     
             })
             .catch(error=> console.log(error))

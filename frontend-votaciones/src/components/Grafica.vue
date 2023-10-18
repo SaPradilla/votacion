@@ -1,7 +1,7 @@
 <script setup >
 import Chart from 'chart.js/auto'
 import { onMounted, ref } from 'vue';
-import ApiServiceCandidatos from '../services/candidatoService'
+
 
 const props = defineProps({
     cantidadVotos: {

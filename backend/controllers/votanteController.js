@@ -61,7 +61,7 @@ const Login = async (req, res) => {
             { votante }, process.env.TOKEN_KEY, { expiresIn: "2h", }
         )
         
-        
+        console.log(votanteLogin.documento)
         return res.header('auth-token', token).json({
             msg:'Inicio de sesion exitoso.',
             data: {token},

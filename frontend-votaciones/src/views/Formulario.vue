@@ -4,6 +4,9 @@
     import { useRouter,useRoute } from 'vue-router'
     import ServiceApi from '../services/VotanteService.js'
     import Spinner from '../components/Spinner.vue';
+    import Alerta from '../components/Alerta.vue';
+    const Error = ref('')
+
     const emit = defineEmits(['update:existe','update:tieneCuenta'])
     const route = useRoute()
 
@@ -27,7 +30,14 @@
 
     })
 
-    const handleSubmit = (data) => {
+    const registrarVotante = (data) => {
+        // if(data.contrasena !== data.confirm_contrasena){
+        //     setTimeout(()=>{
+        //         Error.value = 'La contraseña no coincide'
+        //     },1500)
+        //     Error.value = ''
+        //     return 
+        // }
         cargando.value = true
         ServiceApi.agregarVotante(data) 
             .then(respuesta => {
@@ -37,7 +47,7 @@
         setTimeout(()=>{
             cargando.value = false
             emit('update:tieneCuenta',true)
-        },1500)
+        },2000)
     }
 const loguear = ()=>{
     emit('update:tieneCuenta',true)
@@ -57,7 +67,7 @@ const loguear = ()=>{
                     type="form"
                     id="formulario"
                     :actions="false"
-                    @submit="handleSubmit"
+                    @submit="registrarVotante"
                     :value="persona"
                 >
                     <FormKit 
@@ -101,7 +111,12 @@ const loguear = ()=>{
                         name="documento"
                         placeholder="Número de documento"
                         v-model="persona.documento"
-
+                        validation="number|required|?length:10"
+                        :validation-messages="{
+                            length: 'Documento invalido',
+                            required: 'Documento es obligatorio',
+                            number:'No puedes ingresar letras'
+                        }"
 
                     />
                     <FormKit 
@@ -110,7 +125,12 @@ const loguear = ()=>{
                         name="numero_celular"
                         placeholder="Teléfono: XXX-XXX-XXXX"
                         v-model="persona.numero_celular"
-
+                        validation="number|required|?length:10"
+                        :validation-messages="{
+                            length: 'Ingrese un número de celular válido',
+                            required: 'Documento es obligatorio',
+                            number:'No puedes ingresar letras'
+                        }"
 
                     />
 
@@ -124,10 +144,17 @@ const loguear = ()=>{
                         v-model="persona.correo"
                    
                     />
+      
                     <FormKit type="password" label="Contraseña" name="contrasena" placeholder="Ingrese su contraseña"
-                        validation="required"
-                        :validation-messages="{ required: 'La contraseña es obligatoria' }"
-                        v-model="persona.contrasena" />
+                        validation="required|?length:8"
+                        :validation-messages="{
+                            required: 'Contraseña es obligatorio',
+                            length: 'La contraseña debe tener al menos 8 caracteres',        
+                        }"
+                
+                        v-model="persona.contrasena"
+                        />
+                
                     <FormKit
                         style="background-color:#22c55e ; width: 218px; height: 50px; text-align:center;  padding: 15px; text-align: center;"
                         type="submit"
