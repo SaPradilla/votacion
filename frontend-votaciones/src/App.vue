@@ -3,27 +3,45 @@ import { RouterView,useRouter } from 'vue-router'
 import {onMounted,ref,watch} from 'vue'
 const logueado = ref(false)
 const router = useRouter()
+const token = ref()
 onMounted(()=>{
-  validarLogeo()
+  ObtenerToken()
+
 })
 
 // Para escuchar los cambios del state token con 
 // Event Bus (Autobús de Eventos)
 // Terminar aqui
-watch(localStorage.getItem('token'), ()=>{
-  validarLogeo()
+watch(token, ()=>{
+  ObtenerToken()
+  
 })
+watch(logueado, ()=>{
+  if(token.value){  
+    setTimeout(()=>{
+            logueado.value = true
+          },1500)
+    }
+})
+
 const logout = () =>{
   localStorage.clear()
   router.push({ name:'inicio'})
   logueado.value = false
 
 }
-const validarLogeo = ()=>{
-  if(localStorage.getItem('token')){
-    logueado.value = true
-  }
-  return 
+const ObtenerToken = () => {
+    // Obtiene el token de localstorage y si es existe
+    if (localStorage.getItem('token')) {
+        // Guarda el token en setToken y lo asigna a state
+        token.value = localStorage.getItem('token')
+        if(token.value){
+          setTimeout(()=>{
+            logueado.value = true
+          },1500)
+        }
+    }
+    return
 }
 </script>
 
