@@ -2,6 +2,7 @@
 import { reactive, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import RouterLink from '../components/UI/RouterLink.vue';
+import { eventBus } from './event-bus.js';
 
 import ApiServiceCandidatos from '../services/candidatoService'
 import ApiServiceVotar from '../services/votosService'
